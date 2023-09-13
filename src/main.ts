@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { RedisIoAdapter } from './redis.adapter';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // import { readFileSync } from 'fs';
 
 async function bootstrap() {
@@ -21,7 +22,12 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     // credentials: true,
   });
-
+  const options = new DocumentBuilder()
+    .setTitle('API docs')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api', app, document);
   await app.listen(3003);
 }
 bootstrap();
