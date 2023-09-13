@@ -3,11 +3,15 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { RedisIoAdapter } from './redis.adapter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-// import { readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     rawBody: true,
+    httpsOptions: {
+      key: readFileSync('key.pem', 'utf8'),
+      cert: readFileSync('cert.pem', 'utf8'),
+    },
   });
 
   const redisIoAdapter = new RedisIoAdapter(app);
@@ -20,7 +24,7 @@ async function bootstrap() {
   app.enableCors({
     origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    // credentials: true,
+    credentials: true,
   });
   const options = new DocumentBuilder()
     .setTitle('API docs')
