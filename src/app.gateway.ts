@@ -3,11 +3,16 @@ import {
   WebSocketGateway,
   SubscribeMessage,
   WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({ namespace: 'test', cors: true })
-export class MessageBrokerGateway {
+export class MessageBrokerGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   private logger: Logger = new Logger('Websocket Auth');
 
   @WebSocketServer() server: Server;
